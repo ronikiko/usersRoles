@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Card from '../ui/Card';
-import type { User } from '../../types';
-import { getMockUsers } from '../../services/mockApi';
+import type { User, RoleDefinition } from '../../types';
+import { getMockUsers, getRoles } from '../../services/mockApi';
 import { useAuth } from '../../contexts/AuthContext';
+import Badge from '../ui/Badge';
 
 const StatCard: React.FC<{ title: string; value: string | number; icon: JSX.Element }> = ({ title, value, icon }) => (
     <Card>
@@ -21,16 +22,28 @@ const StatCard: React.FC<{ title: string; value: string | number; icon: JSX.Elem
 const DashboardHome: React.FC = () => {
     const { user: currentUser } = useAuth();
     const [users, setUsers] = useState<User[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [roles, setRoles] = useState<RoleDefinition[]>([]);
+    const [usersLoading, setUsersLoading] = useState(true);
+    const [rolesLoading, setRolesLoading] = useState(true);
 
     useEffect(() => {
         const fetchUsers = async () => {
-            setLoading(true);
+            setUsersLoading(true);
             const userList = await getMockUsers();
             setUsers(userList);
-            setLoading(false);
+            setUsersLoading(false);
         };
         fetchUsers();
+    }, []);
+
+    useEffect(() => {
+        const fetchRoles = async () => {
+            setRolesLoading(true);
+            const roleList = await getRoles();
+            setRoles(roleList);
+            setRolesLoading(false);
+        };
+        fetchRoles();
     }, []);
 
     const totalUsers = users.length;
@@ -47,15 +60,27 @@ const DashboardHome: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <StatCard title="Total Users" value={loading ? '...' : totalUsers} icon={<UsersIcon />} />
-                <StatCard title="Active Users" value={loading ? '...' : activeUsers} icon={<CheckCircleIcon />} />
+                <StatCard title="Total Users" value={usersLoading ? '...' : totalUsers} icon={<UsersIcon />} />
+                <StatCard title="Active Users" value={usersLoading ? '...' : activeUsers} icon={<CheckCircleIcon />} />
                 <StatCard title="Your Role" value={currentUser?.role ?? 'N/A'} icon={<ShieldIcon />} />
             </div>
 
-            <div className="mt-8">
+            <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
                  <Card>
                     <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Quick Actions</h2>
                      <p className="text-gray-600 dark:text-gray-300">Use the sidebar to navigate through the user management system.</p>
+                </Card>
+                <Card>
+                    <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Active Roles</h2>
+                    {rolesLoading ? (
+                        <p className="text-gray-600 dark:text-gray-300">Loading roles...</p>
+                    ) : (
+                        <div className="flex flex-wrap gap-2">
+                            {roles.map(role => (
+                                <Badge key={role.name} role={role.name} />
+                            ))}
+                        </div>
+                    )}
                 </Card>
             </div>
         </div>

@@ -1,0 +1,5 @@
+{
+  "name": "Stellar User Management",
+  "description": "A comprehensive dashboard for managing users, roles, and permissions with an integrated audit log. This front-end application simulates a full-stack user management system with role-based access control.",
+  "requestFramePermissions": []
+}

@@ -1,7 +1,9 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import type { AuditLog } from '../../types';
 import { getAuditLogs } from '../../services/mockApi';
 import Card from '../ui/Card';
+import TableSkeleton from '../ui/skeletons/TableSkeleton';
 
 const AuditLogList: React.FC = () => {
     const [logs, setLogs] = useState<AuditLog[]>([]);
@@ -19,7 +21,12 @@ const AuditLogList: React.FC = () => {
     }, [fetchLogs]);
 
     if (loading) {
-        return <div className="text-center p-8">Loading audit logs...</div>;
+        return (
+            <div>
+                <div className="h-9 w-48 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-6"></div>
+                <TableSkeleton rows={10} cols={3} />
+            </div>
+        );
     }
     
     return (

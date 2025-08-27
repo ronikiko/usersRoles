@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import DashboardLayout from '../layout/DashboardLayout';
 import type { Page } from '../layout/Sidebar';
@@ -6,6 +7,7 @@ import UserList from '../users/UserList';
 import RoleList from '../roles/RoleList';
 import AuditLogList from '../audit/AuditLogList';
 import DashboardHome from './DashboardHome';
+import SettingsPage from '../settings/SettingsPage';
 import { useAuthorization } from '../../hooks/useAuthorization';
 import { Permission } from '../../types';
 
@@ -19,6 +21,8 @@ const PageContent: React.FC<{ page: Page }> = ({ page }) => {
       return <RoleList />;
     case 'Audit Log':
       return <AuditLogList />;
+    case 'Settings':
+      return <SettingsPage />;
     default:
       return <DashboardHome />;
   }

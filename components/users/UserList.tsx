@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import type { User } from '../../types';
 import { Role, Permission } from '../../types';
@@ -8,6 +9,7 @@ import Button from '../ui/Button';
 import Badge from '../ui/Badge';
 import Card from '../ui/Card';
 import UserFormModal from './UserFormModal';
+import TableSkeleton from '../ui/skeletons/TableSkeleton';
 
 // SVG Icons for actions
 const EditIcon: React.FC = () => (
@@ -75,7 +77,17 @@ const UserList: React.FC = () => {
     };
 
     if (loading) {
-        return <div className="text-center p-8">Loading users...</div>;
+        return (
+            <>
+                <div className="flex justify-between items-center mb-6 animate-pulse">
+                    <div className="h-9 w-64 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                    {canCreate && (
+                        <div className="h-9 w-24 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                    )}
+                </div>
+                <TableSkeleton rows={5} cols={5} />
+            </>
+        );
     }
 
     return (

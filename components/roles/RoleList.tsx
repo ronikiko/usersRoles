@@ -7,6 +7,7 @@ import { useAuthorization } from '../../hooks/useAuthorization';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 import RoleFormModal from './RoleFormModal';
+import RoleCardSkeleton from './RoleCardSkeleton';
 
 const EditIcon: React.FC = () => (
     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -126,7 +127,23 @@ const RoleList: React.FC = () => {
     };
 
 
-    if (loading) return <div className="text-center p-8 dark:text-gray-300">Loading roles...</div>;
+    if (loading) {
+        return (
+            <>
+                <div className="flex justify-between items-center mb-6 animate-pulse">
+                    <div className="h-9 w-80 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                     {canManage && (
+                        <div className="h-9 w-24 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                    )}
+                </div>
+                <div className="space-y-6">
+                    <RoleCardSkeleton />
+                    <RoleCardSkeleton />
+                    <RoleCardSkeleton />
+                </div>
+            </>
+        )
+    }
 
     return (
         <>

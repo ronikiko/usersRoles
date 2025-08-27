@@ -1,9 +1,11 @@
+
 import React, { useEffect, useState } from 'react';
 import Card from '../ui/Card';
 import type { User, RoleDefinition } from '../../types';
 import { getMockUsers, getRoles } from '../../services/mockApi';
 import { useAuth } from '../../contexts/AuthContext';
 import Badge from '../ui/Badge';
+import StatCardSkeleton from './StatCardSkeleton';
 
 const StatCard: React.FC<{ title: string; value: string | number; icon: JSX.Element }> = ({ title, value, icon }) => (
     <Card>
@@ -60,8 +62,17 @@ const DashboardHome: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <StatCard title="Total Users" value={usersLoading ? '...' : totalUsers} icon={<UsersIcon />} />
-                <StatCard title="Active Users" value={usersLoading ? '...' : activeUsers} icon={<CheckCircleIcon />} />
+                {usersLoading ? (
+                    <>
+                        <StatCardSkeleton />
+                        <StatCardSkeleton />
+                    </>
+                ) : (
+                    <>
+                        <StatCard title="Total Users" value={totalUsers} icon={<UsersIcon />} />
+                        <StatCard title="Active Users" value={activeUsers} icon={<CheckCircleIcon />} />
+                    </>
+                )}
                 <StatCard title="Your Role" value={currentUser?.role ?? 'N/A'} icon={<ShieldIcon />} />
             </div>
 
@@ -73,7 +84,11 @@ const DashboardHome: React.FC = () => {
                 <Card>
                     <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Active Roles</h2>
                     {rolesLoading ? (
-                        <p className="text-gray-600 dark:text-gray-300">Loading roles...</p>
+                        <div className="flex flex-wrap gap-2 animate-pulse">
+                            <div className="h-6 w-20 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+                            <div className="h-6 w-24 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+                            <div className="h-6 w-16 bg-gray-200 dark:bg-gray-700 rounded-full"></div>
+                        </div>
                     ) : (
                         <div className="flex flex-wrap gap-2">
                             {roles.map(role => (
